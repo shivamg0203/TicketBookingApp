@@ -1,0 +1,768 @@
+# API Documentation
+---
+---
+# UserSignup Resource
+UserSignup:
+  uri: "/api/"
+  # Description of the resource
+  description: Resource for user registration.
+  # POST Method
+  methods:
+    post:
+      # Description of the POST method
+      description: Create a new user account.
+      # Request Body
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: User's username (unique).
+                email:
+                  type: string
+                  description: User's email (unique).
+                password:
+                  type: string
+                  description: User's password.
+
+      # Responses
+      responses:
+        '200':
+          description: User account created successfully.
+          content:
+            application/json:
+              example:
+                message: Success! Account Created
+        '400':
+          description: Invalid or missing request data.
+          content:
+            application/json:
+              example:
+                message: Invalid request data
+        '409':
+          description: User with the same username or email already exists.
+          content:
+            application/json:
+              example:
+                message: Username or email already exists
+        '500':
+          description: An error occurred during user registration.
+          content:
+            application/json:
+              example:
+                message: Internal server error
+
+    # GET Method
+    get:
+      # Description of the GET method
+      description: Handle GET requests at the root endpoint.
+      # Responses
+      responses:
+        '200':
+          description: A message indicating the request type.
+          content:
+            application/json:
+              example:
+                message: Get request at UserSignup
+        '404':
+          description: If the GET request is not applicable for this resource.
+          content:
+            application/json:
+              example:
+                message: Resource not found
+
+SignIn:
+  uri: "/api/signin"
+  methods:
+    get:
+        description: Retrieve user information
+        security:
+          - jwt: []
+        responses:
+          200:
+            description: User information retrieved successfully
+            content:
+              application/json: {}
+          401:
+            description: Unauthorized access
+    post:
+        description: Sign in a user
+        request:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+                  role:
+                    type: boolean
+                required:
+                  - username
+                  - password
+                  - role
+        responses:
+          200:
+            description: User signed in successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    access_token:
+                      type: string
+                    role:
+                      type: string
+          400:
+            description: Bad request, missing or invalid parameters
+          401:
+            description: Unauthorized, invalid user credentials
+          404:
+            description: User not found
+          500:
+            description: Internal server error
+
+SignOut:
+  uri: "/api/signout"
+  methods:
+    - post:
+        description: Log out a user
+        summary: Log out the currently authenticated user
+        security:
+          - jwt: []
+        responses:
+          200:
+            description: User successfully logged out
+            content:
+              application/json:
+                example:
+                  message: Successfully logged out
+          401:
+            description: Unauthorized, user not authenticated
+            content:
+              application/json:
+                example:
+                  message: Unauthorized, user not authenticated
+          500:
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  message: Internal Error Occurred
+
+Venue:
+  uri: "/api/venue"
+  methods:
+    get:
+      description: Initiate a celery tasks which returns theatre's data in a specified format
+      summary: Get admin CSV data
+      security:
+        - jwt: []
+      responses:
+        200:
+          description: Admin CSV data retrieval successful
+          content:
+            application/json: {}
+        401:
+          description: Unauthorized access
+          content:
+            application/json:
+              example:
+                message: Unauthorized, invalid user credentials
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: An error occurred
+
+    post:
+      description: Create a new venue/theatre
+      summary: Create a new venue
+      security:
+        - jwt: []
+      requestBody:
+        description: Venue details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                capacity:
+                  type: integer
+                place:
+                  type: string
+                city:
+                  type: string
+              required:
+                - name
+                - capacity
+                - place
+                - city
+      responses:
+        200:
+          description: New venue created successfully
+          content:
+            application/json: {}
+        400:
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              example:
+                message: Bad request, missing or invalid parameters
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+    delete:
+      description: Delete a venue
+      summary: Delete a venue by ID
+      security:
+        - jwt: []
+      requestBody:
+        description: Venue ID to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                VenueId:
+                  type: integer
+              required:
+                - VenueId
+      responses:
+        200:
+          description: Venue deleted successfully
+          content:
+            application/json: {}
+        404:
+          description: Venue not found
+          content:
+            application/json:
+              example:
+                message: Venue not found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: An error occurred
+
+    patch:
+      description: Update a venue
+      summary: Update a venue by ID
+      security:
+        - jwt: []
+      requestBody:
+        description: Venue details to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                capacity:
+                  type: integer
+                place:
+                  type: string
+                location:
+                  type: string
+              required:
+                - id
+                - name
+                - capacity
+                - place
+                - location
+      responses:
+        200:
+          description: Venue update successful
+          content:
+            application/json: {}
+        404:
+          description: Venue not found
+          content:
+            application/json:
+              example:
+                message: Venue not found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: An error occurred
+
+Show:
+  uri: "/api/show"
+  methods: 
+    get:
+      description: Get all shows
+      summary: Retrieve a list of all shows and their associated venues
+      security:
+        - jwt: []
+      responses:
+        200:
+          description: Shows retrieved successfully
+          content:
+            application/json:
+              example:
+                data:
+                  - venue_details:
+                      name: Venue Name 1
+                      capacity: 100
+                      place: Venue Place 1
+                      city: Venue City 1
+                    show_details:
+                      - id: 1
+                        name: Show 1
+                        date: Show Date 1
+                        price: 10.0
+                        tags: Tag1, Tag2
+                      - id: 2
+                        name: Show 2
+                        date: Show Date 2
+                        price: 15.0
+                        tags: Tag3, Tag4
+                  - venue_details:
+                      name: Venue Name 2
+                      capacity: 200
+                      place: Venue Place 2
+                      city: Venue City 2
+                    show_details:
+                      - id: 3
+                        name: Show 3
+                        date: Show Date 3
+                        price: 20.0
+                        tags: Tag5, Tag6
+                  # Additional venue-show pairs go here
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                data: Some Error occurred
+
+    post:
+      description: Add a new show
+      summary: Add a new show to a venue
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              linkVID: 1
+              showname: New Show
+              ratings: 4.5
+              duration: 2:00
+              dateTime: 2023-09-17T19:00
+              tags: Tag1, Tag2
+              price: 15.0
+      responses:
+        200:
+          description: New show added successfully
+          content:
+            application/json:
+              example:
+                message: New Show Added
+        400:
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              example:
+                message: Invalid duration format
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+   
+    patch:
+      description: Update/Edit a show
+      summary: Update the details of an existing show
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              id: 1
+              name: Updated Show Name
+              rating: 4.7
+              duration: "02:15"
+              dateTime: "2023-09-18T20:15"
+              tags: Tag1, Tag2, Tag3
+              price: 18.0
+      responses:
+        200:
+          description: Show details updated successfully
+          content:
+            application/json:
+              example:
+                message: Show Update Successful
+        400:
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              example:
+                message: Invalid duration format
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+
+    delete:
+      description: Delete a show
+      summary: Delete an existing show and its association with a venue
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              VenueId: 1
+              ShowId: 2
+      responses:
+        200:
+          description: Show and venue association deleted successfully
+          content:
+            application/json:
+              example:
+                message: Venue deleted successfully
+        404:
+          description: Venue or show not found
+          content:
+            application/json:
+              example:
+                message: Venue not found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+
+Orders:
+  uri: "/api/order"
+  methods: 
+    get:
+      description: Get a list of orders made by the authenticated user
+      summary: Retrieve a list of orders placed by the currently authenticated user.
+      security:
+        - jwt: []
+      responses:
+        200:
+          description: List of user orders retrieved successfully
+          content:
+            application/json:
+              example:
+                - orderId: 1
+                  userId: 123
+                  showId: 456
+                  venueId: 789
+                  quantity: 2
+                  totalAmount: 36.0
+                  orderStatus: "Confirmed"
+                  orderDate: "2023-09-14T10:30:00"
+                
+                - orderId: 2
+                  userId: 123
+                  showId: 789
+                  venueId: 456
+                  quantity: 3
+                  totalAmount: 54.0
+                  orderStatus: "Pending"
+                  orderDate: "2023-09-15T15:45:00"
+                  
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+
+    post:
+      description: Create a new booking
+      summary: Book seats for a show at a venue.
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                SId:
+                  type: integer
+                  description: The ID of the show to book seats for.
+                VId:
+                  type: integer
+                  description: The ID of the venue where the show is hosted.
+                Seats:
+                  type: integer
+                  description: The number of seats to book.
+            required:
+              - SId
+              - VId
+              - Seats
+      responses:
+        200:
+          description: Booking successful
+          content:
+            application/json:
+              example:
+                message: Seat Book Successful
+        400:
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              example:
+                message: Not Enough Seats
+        404:
+          description: Show not found
+          content:
+            application/json:
+              example:
+                message: Show not found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+    
+    patch:
+      description: Rate an order
+      summary: Rate an order by user for previously booked order.
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the order to rate.
+                rated:
+                  type: integer
+                  description: The rating to assign to the order (0-5).
+            required:
+              - id
+              - rated
+      responses:
+        200:
+          description: Order rating updated successfully
+          content:
+            application/json:
+              example:
+                message: Order Update Successful
+        400:
+          description: Bad request, missing or invalid parameters
+        404:
+          description: Order not found
+          content:
+            application/json:
+              example:
+                message: Order not found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: Internal Error Occurred
+
+    delete:
+      description: Delete order route
+      summary: Delete an order (no actual deletion, just a placeholder route).
+      security:
+        - jwt: []
+      responses:
+        200:
+          description: Placeholder route reached
+          content:
+            application/json:
+              example:
+                message: /order is reached
+
+Jobs:
+  uri: "/api/job"
+  methods:             
+    post:
+      description: Send an email with CSV data
+      summary: Trigger a background task to send an email with CSV data to the specified address.
+      security:
+        - jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to_address:
+                  type: string
+                  format: email
+                  description: The recipient's email address.
+                message:
+                  type: string
+                  description: The content of the email message, which includes CSV data.
+                subject:
+                  type: string
+                  description: The subject of the email.
+            required:
+              - to_address
+              - message
+              - subject
+      responses:
+        200:
+          description: Email sent successfully
+          content:
+            application/json:
+              example:
+                message: Check Your Mail
+        400:
+          description: Bad request, missing or invalid parameters
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                message: An error occurred
+
+Views.py File: 
+  methods:
+    getlist():
+      uri: '/getlist'
+      methods: 
+        get:
+          summary: Get a list of unique locations, prices, and tags
+          description: |
+            This endpoint returns a list of unique locations, prices, and tags available in the system.
+
+            It retrieves unique location data from the `Theatre` table, unique price data from the `Show` table, and distinct tags from all shows in the system.
+
+            The response includes the following data:
+            - `location`: A list of unique location names.
+            - `price`: A list of unique show prices.
+            - `tag`: A list of distinct tags used in shows.
+
+            Example usage:
+            ```shell
+            GET /api/getlist
+            ```
+          responses:
+            '200':
+              description: Successful response with unique location, price, and tag data
+              content:
+                application/json:
+                  example:
+                    location:
+                      - New York
+                      - Los Angeles
+                      - Chicago
+                    price:
+                      - 10.0
+                      - 15.0
+                      - 20.0
+                    tag:
+                      - Comedy
+                      - Drama
+                      - Action
+            '500':
+              description: Internal server error
+    searchvenue(type, value):          
+      uri: '/userfiltervenue/<type>/<value>'
+      methods:
+        get:
+          summary: Get venues and shows based on filter criteria
+          description: |
+            This endpoint allows you to retrieve venues and shows based on filter criteria.
+            
+            If the `value` is "All," it returns all venues and their associated shows.
+            If the `type` is "location," it filters venues by city and returns associated shows.
+            If the `value` matches a show tag, it returns venues with shows matching that tag.
+            
+            The response includes venue and show data based on the filter criteria.
+
+            Example usage:
+            ```shell
+            GET /api/userfiltervenue/location/New York
+            ```
+
+          parameters:
+            - name: type
+              in: path
+              description: The filter type (location or tag)
+              required: true
+              type: string
+            - name: value
+              in: path
+              description: The filter value (All, a location, or a tag)
+              required: true
+              type: string
+
+          responses:
+            '200':
+              description: Successful response with filtered venues and shows
+              content:
+                application/json:
+                  example:
+                    data:
+                      FilteredVenueShowData
+    checkauth():
+      uri: '/checkauth'
+      methods:
+        get:
+          summary: Check user authentication status
+          description: |
+            This endpoint allows you to check the authentication status of a user.
+            
+            If the user is authenticated, it returns a message indicating successful authentication, and if the user is not authenticated, it returns a message indicating unauthenticated status.
+
+            Example usage:
+            ```shell
+            GET /api/checkauth
+            ```
+
+          responses:
+            '200':
+              description: Successful response with authentication status
+              content:
+                application/json:
+                  examples:
+                    - name: Authenticated
+                      value:
+                        message: true
+                    - name: Unauthenticated
+                      value:
+                        message: false
+            '500':
+              description: Internal server error
+
+
+
+              

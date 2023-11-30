@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        h4,p{
+            font-size: 10pt;
+        }
+    </style>
+</head>
+<h1>Author Name</h1>
+<h4>Full Name: Shivam Gupta</h4>
+<h4>Roll No. :21f1003942</h4>
+<h4>I am a computer science student with a strong interest in web development and software engineering.</h4>
+
+
+<h1>Description</h1>
+<h4>This project aims to develop a web application using Flask and Vue combination to effectively manage show bookings. Database design was an important part of this app. Celery and celery-beat together help in easy execution of tasks in timely manner.</h4>
+
+
+<h1>Technologies Used</h1>
+    <h4>- Flask: A micro web framework for building web applications in Python.</h4>
+    <h4>- SQLAlchemy: A SQL toolkit and Object-Relational Mapping (ORM) library for Python.</h4>
+    <h4>- HTML/CSS: For building the user interface and styling.</h4>
+    <h4>- JavaScript: For adding interactivity to the web application.</h4>
+    <h4>- SQLite: A lightweight, serverless database for storing task data.</h4>
+    <h4>- Redis: An in-memory data store used for caching and background job processing.</h4>
+    <h4>  Purpose: For high-speed cache.</h4>
+    <h4>- Celery: A distributed task queue system that handles background processing of tasks asynchronously.</h4>
+    <h4>  Purpose: For asynchronous tasks.</h4>
+    <h4>- Vue.js: A progressive JavaScript framework for building user interfaces.</h4>
+    <h4>  Purpose: Vue.js is used for creating dynamic and responsive front-end components and enhancing user
+        interactivity.</h4>
+    <h4>- Celery Beat: A scheduler that manages periodic tasks within the Celery framework.</h4>
+    <h4>  Purpose: For scheduling tasks.</h4>
+    <h4>- Flask-JWT-Extended: An extension for Flask that provides JSON Web Token (JWT) authentication.</h4>
+    <h4>  Purpose: Token-based Authentication.</h4>
+    <h4>- Purpose: These technologies were chosen for their compatibility and ease of use in developing a web-based
+        task management system.</h4>
+
+
+<!-- <h1>Technologies Used</h1>
+<h4>- Flask: A micro web framework for building web applications in Python.
+    - SQLAlchemy: A SQL toolkit and Object-Relational Mapping (ORM) library for Python.
+    - HTML/CSS: For building the user interface and styling.
+    - JavaScript: For adding interactivity to the web application.
+    - SQLite: A lightweight, serverless database for storing task data.
+    - Redis: An in-memory data store used for caching and background job processing.
+      Purpose: For high-speed cache.
+    - Celery: A distributed task queue system that handles background processing of tasks asynchronously.
+      Purpose: For asynchronous tasks.
+    - Vue.js: A progressive JavaScript framework for building user interfaces.
+      Purpose: Vue.js is used for creating dynamic and responsive front-end components and enhancing user interactivity.
+    - Celery Beat: A scheduler that manages periodic tasks within the Celery framework.
+      Purpose: For scheduling tasks.
+    - Flask-JWT-Extended: An extension for Flask that provides JSON Web Token (JWT) authentication.
+      Purpose: Token  based Authentication.
+    - Purpose: These technologies were chosen for their compatibility and ease of use in developing a web-based task management system.
+</h4> -->
+
+
+<h1>DB Schema Design</h1>
+
+<ul>
+    <li>
+        <h4>User</h4>
+        <ul>
+            <li>Table Name: user</li>
+            <li>Columns:
+                <ul>
+                    <li>id: Integer, Primary Key</li>
+                    <li>role_id: Integer, Foreign Key to role.id, Not Nullable</li>
+                    <li>username: String(50), Unique, Not Nullable</li>
+                    <li>email: String(120), Unique, Not Nullable</li>
+                    <li>password: String(100), Not Nullable</li>
+                </ul>
+            </li>
+            <li>Description: Represents user information with a role association.</li>
+        </ul>
+    </li>
+
+    <li>
+    <h4>TheatreShow</h4>
+    <ul>
+        <li>Table Name: theatreshow</li>
+        <li>Columns:
+            <ul>
+                <li>id: Integer, Primary Key, Autoincrement</li>
+                <li>theatre_id: Integer, Foreign Key to theatre.id, Not Nullable</li>
+                <li>show_id: Integer, Foreign Key to show.id, Not Nullable</li>
+            </ul>
+        </li>
+        <li>Description: Represents the relationship between theatres and shows.</li>
+    </ul>
+    </li>
+
+    
+    <li>
+      <h4>Show</h4>
+        <ul>
+          <li>Table Name: show</li>
+          <li>Columns:
+            <ul>
+              <li>id: Integer, Primary Key, Autoincrement</li>
+              <li>name: String(150), Unique</li>
+              <li>duration: Time</li>
+              <li>rating: Float</li>
+              <li>tags: Text</li>
+              <li>price: Integer, Default 100</li>
+              <li>seat_available: Integer, Not Nullable</li>
+              <li>dateTime: DateTime</li>
+            </ul>
+          </li>
+          <li>Description: Represents show information.</li>
+        </ul>
+    </li>
+  
+    <li>
+        <h4>Order</h4>
+        <ul>
+          <li>Table Name: order</li>
+          <li>Columns:
+            <ul>
+              <li>id: Integer, Primary Key, Autoincrement</li>
+              <li>show_id: Integer, Foreign Key to show.id, Not Nullable</li>
+              <li>user_id: Integer, Foreign Key to user.id, Not Nullable</li>
+              <li>venue_id: Integer, Foreign Key to theatre.id, Not Nullable</li>
+              <li>rated: Integer, Default 0, Not Nullable</li>
+              <li>seats: Integer, Not Nullable</li>
+              <li>created: DateTime, Not Nullable</li>
+            </ul>
+          </li>
+          <li>Description: Represents user orders for shows.</li>
+        </ul>
+    </li>
+
+    <li>
+      <h4>Role</h4>
+      <ul>
+        <li>Table Name: role</li>
+        <li>Columns:
+          <ul>
+            <li>id: Integer, Primary Key</li>
+            <li>name: String, Not Nullable, Unique</li>
+            <li>description: String, Unique</li>
+          </ul>
+        </li>
+        <li>Description: Represents user roles.</li>
+      </ul>
+    </li>
+    
+    <li>
+      <h4>Theatre</h4>
+      <ul>
+        <li>Table Name: theatre</li>
+        <li>Columns:
+          <ul>
+            <li>id: Integer, Primary Key, Autoincrement</li>
+            <li>name: String, Not Nullable</li>
+            <li>capacity: Integer, Not Nullable</li>
+            <li>city: String, Not Nullable</li>
+            <li>place: String, Not Nullable</li>
+          </ul>
+        </li>
+        <li>Description: Represents theatre information.</li>
+      </ul>
+    </li>
+    
+    <h4>Reason</h4>
+    <p>
+      - Reasons: This design follows a relational database model to efficiently store user and task data, allowing for easy retrieval and management.
+    </p>
+    
+</ul>
+
+
+
+<h1>API Design</h1>
+<h4>Apis are defined in two files api.py, which is a RESTful api and views.py where most of the endpoints are written in api.py file</h4>
+<ul>
+  <li>User Authentication: Implements user signup, signin, and signout functionalities.</li>
+  <li>Venue and Show: Manages venues, shows, orders, and background jobs.</li>
+  <li>Views Blueprint: Contains routes for rendering templates and handling authentication.</li>
+  <li>User Authentication: Utilizes JWT (JSON Web Tokens) with Flask-JWT-Extended for user authentication.</li>
+  <li>Venue Filtering: Provides endpoints for filtering venues by location, price, and tags.</li>
+  <li>Protected Routes: Includes routes that require JWT authentication to access.</li>
+</ul>
+
+
+
+<h1>Architecture and Features</h1>
+<ul>
+      <li>Project Organization: The project has a templates folder which has a file index.html which is accessible at '/' endpoint defined in views follows the Model-View-Controller (MVC) architecture. All Vuejs uses cdn version, and it's code is written in .js files located in static folder vue router is defined in main.js. Database is situated in instance folder. This app is run by starting main.py file. Celery is instantiated in workers.py and it's tasks are written in tasks.py alongwith celerybeat tasks. There is single file for styling named style.css.
+      </li>    
+      
+      <li>Features: Implemented features include user registration and login, task creation, editing, and deletion, sending email to user on monthly and daily basis.
+      </li>
+    </ul>
+    
+
+
+<h1>Video</h1>
+<a href='https://drive.google.com/file/d/1LSGKLFzWoEL72WIylLXjzRb0B3KgJEe8/view?usp=drive_link' target="_parent">View demo video</a>
+
+</html>

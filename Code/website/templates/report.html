@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- Bootstrap CSS -->
+    <title>Monthly Reort</title>
+  </head>
+  <style>
+    body{
+      justify-content:center;
+      align-items: center;
+
+    }
+    h1{
+      color:red;
+    }
+    table {
+      
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+
+  </style>
+  <body>
+    <h1>Hi User this is your Monthly Report</h1>
+
+    {% if data %}
+    <table>
+        <thead>
+            <tr>
+                <th>ShowName</th>
+                <th>Rating</th>
+                <th>Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for userdata in data %}
+            <tr>
+                <td>{{ userdata['show_name'] }}</td>
+                <td>{{ userdata['rating'] }}</td>
+                <td>{{ userdata['paid'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>You had no booking.</p>
+    {% endif %}
+
+    <!-- <table>
+        <thead>
+            <tr>
+                <th>ShowName</th>
+                <th>Rating</th>
+                <th>Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for userdata in data %}
+            <tr>
+                <td>{{ userdata['show_name'] }}</td>
+                <td>{{ userdata['rating'] }}</td>
+                <td>{{ userdata['paid'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+  </body>
+</html>
